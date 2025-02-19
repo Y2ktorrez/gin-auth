@@ -5,8 +5,11 @@ import (
 	"github.com/mutinho/src/model"
 )
 
-func CreateUser(user *model.User) error {
-	return config.DB.Create(user).Error
+func CreateUser(user *model.User) (*model.User, error) {
+	if err := config.DB.Create(user).Error; err != nil {
+		return nil, err
+	}
+	return user, nil
 }
 
 func GetUserByEmail(email string) (*model.User, error) {

@@ -25,12 +25,29 @@ func Register(c *gin.Context) {
 		return
 	}
 
-	if err := service.RegisterUser(req.Username, req.Email, req.Password); err != nil {
+	user, err := service.RegisterUser(req.Username, req.Email, req.Password)
+	if err != nil {
 		c.JSON(http.StatusConflict, gin.H{"error": err.Error()})
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "User registered successfully"})
+	c.JSON(http.StatusCreated, gin.H{
+		"message":  "User registered successfully",
+		"id":       user.ID,
+		"username": user.Name,
+		"email":    user.Email,
+	})
+
+	// Crear un mapa en el orden específico
+	/*response := map[string]interface{}{
+		"message":  "User registered successfully",
+		"id":       user.ID,
+		"username": user.Name,
+		"email":    user.Email,
+	}
+	// Enviar respuesta con el orden correcto
+	c.JSON(http.StatusCreated, response)*/
+
 }
 
 func Login(c *gin.Context) {

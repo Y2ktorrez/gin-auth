@@ -8,18 +8,20 @@ import (
 	"github.com/mutinho/util"
 )
 
-func RegisterUser(name, email, password string) error {
-	user := model.User{
+func RegisterUser(name, email, password string) (*model.User, error) {
+	user := &model.User{
 		Name:     name,
 		Email:    email,
 		Password: password,
 	}
-
 	if err := user.HashPassword(); err != nil {
-		return err
+		return nil, err
 	}
-
-	return repository.CreateUser(&user)
+	createdUser, err := repository.CreateUser(user)
+	if err != nil {
+		return nil, err
+	}
+	return createdUser, nil
 }
 
 func LoginUser(email, password string) (string, error) {
